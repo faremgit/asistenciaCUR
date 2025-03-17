@@ -2,30 +2,28 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Asistencia</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     <h1>Registro de Asistencia</h1>
-    
+
     <!-- Muestra la fecha y hora obtenidas del QR -->
     <div id="fecha-hora" class="clock"></div>
 
     <!-- Formulario de asistencia -->
     <form id="registro-form">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" required>
-
-      <label for="apellido">Apellido:</label>
-      <input type="text" id="apellido" required>
+      <label for="nombre">Nombre y Apellido:</label>
+      <input type="text" id="nombre" placeholder="Ejemplo: Juan Pérez" required>
 
       <input type="hidden" id="fecha" name="fecha">
       <input type="hidden" id="hora" name="hora">
 
       <button type="submit">Registrar Asistencia</button>
     </form>
-    
+
     <p id="mensaje" class="mensaje"></p>
   </div>
 
@@ -39,7 +37,7 @@
         return;
       }
 
-      // Extraer fecha y hora del código QR (formato: YYYY-MM-DD_HH-MM-SS-random)
+      // Extraer fecha y hora del código QR
       const partes = codigoQR.split("_");
       if (partes.length < 2) {
         document.getElementById("fecha-hora").textContent = "⚠ Código QR inválido.";
@@ -47,7 +45,7 @@
       }
 
       const fecha = partes[0];
-      const hora = partes[1].split("-").join(":"); // Convertimos HH-MM-SS a HH:MM:SS
+      const hora = partes[1].split("-").join(":");
 
       // Mostrar la fecha y hora del QR en pantalla
       document.getElementById("fecha-hora").textContent = `Fecha del QR: ${fecha} | Hora: ${hora}`;
@@ -60,19 +58,18 @@
       document.getElementById("registro-form").addEventListener("submit", function(event) {
         event.preventDefault();
 
-        const nombre = document.getElementById("nombre").value;
-        const apellido = document.getElementById("apellido").value;
+        const nombre = document.getElementById("nombre").value.trim();
 
-        if (!nombre || !apellido) {
-          document.getElementById("mensaje").textContent = "Por favor, completa todos los campos.";
+        if (!nombre) {
+          document.getElementById("mensaje").textContent = "Por favor, ingrese su nombre y apellido.";
           return;
         }
 
-        // Simular el almacenamiento de datos (aquí podrías enviar a un backend)
-        console.log("Registro guardado:", { nombre, apellido, fecha, hora });
+        // Simulación de almacenamiento
+        console.log("Registro guardado:", { nombre, fecha, hora });
 
         // Mostrar mensaje de confirmación
-        document.getElementById("mensaje").textContent = `✔ Asistencia registrada para ${nombre} ${apellido} a las ${hora} del ${fecha}.`;
+        document.getElementById("mensaje").textContent = `✔ Asistencia registrada para ${nombre} a las ${hora} del ${fecha}.`;
         document.getElementById("mensaje").style.color = "green";
 
         // Limpiar el formulario después de unos segundos

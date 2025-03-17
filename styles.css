@@ -1,67 +1,75 @@
-/* Reset básico */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
+/* Estilos generales */
+body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #7d7aff, #9795f0);
-    color: #333;
+    background-color: #f4f4f4;
     display: flex;
-    align-items: center;
     justify-content: center;
-    min-height: 100vh;
-  }
-
-  /* Reloj */
-.clock {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    font-weight: bold;
-    color: #333;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
   }
   
   /* Contenedor principal */
   .container {
-    background-color: #ffffffcc; /* Fondo blanco semitransparente */
-    border-radius: 8px;
-    padding: 30px 20px;
-    max-width: 500px;
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 450px;
     width: 90%;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
   
   /* Título */
-  .container h1 {
+  h1 {
+    font-size: 1.8rem;
+    color: #333;
     margin-bottom: 20px;
-    color: #4a4a4a;
   }
   
-  /* Contenedor del QR centrado */
-  .qr-container {
-    margin: 0 auto 20px auto; /* Centrado y separación inferior */
-    width: 256px;
-    height: 256px;
+  /* Estilos del reloj */
+  .clock {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #e9e9e9;
+    border-radius: 8px;
   }
   
-  /* Texto descriptivo */
-  .container p {
+  /* Estilos del input */
+  input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  
+  /* Botón atractivo */
+  button {
+    width: 100%;
+    background-color: #5c67f2;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+  
+  button:hover {
+    background-color: #434de5;
+  }
+  
+  /* Mensaje de confirmación */
+  .mensaje {
     font-size: 1rem;
-    color: #555;
-  }
-  
-  /* Responsividad */
-  @media (max-width: 480px) {
-    .container {
-      width: 95%;
-      padding: 20px;
-    }
-  
-    .container h1 {
-      font-size: 1.3rem;
-    }
+    font-weight: bold;
+    margin-top: 15px;
   }
   
