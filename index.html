@@ -2,58 +2,60 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Generador de QR de Asistencia</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     <h1>Generación del Código QR Diario</h1>
-    <!-- Reloj en tiempo real -->
-    <div id="clock" class="clock"></div>
-    <!-- Contenedor del QR -->
+    
+    <!-- ⏰ Reloj en tiempo real corregido -->
+    <div id="clock" class="clock">00:00:00</div>
+
+    <!-- 📌 Contenedor del QR corregido -->
     <div id="qr-container" class="qr-container"></div>
+
     <p>Escanea este código con el dispositivo del docente para registrar asistencia.</p>
   </div>
   
-  <!-- Librería para generar QR -->
+  <!-- 📌 Librería QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
   <script>
-    // Función para actualizar el reloj cada segundo
+    // ✅ Función corregida para actualizar el reloj en tiempo real
     function actualizarReloj() {
       const now = new Date();
       const hora = now.getHours().toString().padStart(2, '0');
       const minutos = now.getMinutes().toString().padStart(2, '0');
       const segundos = now.getSeconds().toString().padStart(2, '0');
-      document.getElementById('reloj').textContent = `${hora}:${minutos}:${segundos}`;
+      document.getElementById('clock').textContent = `${hora}:${minutos}:${segundos}`;
     }
 
-    // Llamada inmediata para mostrar la hora al cargar
-    actualizarReloj();
-    // Actualiza cada segundo
+    // ⏰ Iniciar reloj
     setInterval(actualizarReloj, 1000);
+    actualizarReloj();
 
-    // Función para generar un código único basado en la fecha, hora y un identificador aleatorio
+    // ✅ Genera un código único con la fecha y hora
     function generarCodigoUnico() {
       const ahora = new Date();
-      // Formateamos la fecha y hora en formato YYYY-MM-DD_HH-MM-SS
       const fecha = ahora.toISOString().split('T')[0];
       const hora = ahora.toTimeString().split(' ')[0].replace(/:/g, "-");
       const random = Math.random().toString(36).substr(2, 5).toUpperCase();
       return `${fecha}_${hora}-${random}`;
     }
 
-    // Genera la URL con el código único
+    // ✅ Genera el enlace con el código
     function generarEnlaceQR() {
       const codigo = generarCodigoUnico();
-      // Ajusta la ruta de registro según tu entorno
-      const urlRegistro = "https://faremgit.github.io/asistenciaCUR/registro.html?codigo=" + codigo;
+      const urlRegistro = `https://faremgit.github.io/asistenciaCUR/registro.html?codigo=${codigo}`;
       return { codigo, urlRegistro };
     }
 
-    // Función para generar el código QR usando QRCode.js
+    // ✅ Generar el código QR con la URL generada
     function generarQR(url) {
       const qrContainer = document.getElementById('qr-container');
-      qrContainer.innerHTML = ""; // Limpiar contenedor
+      qrContainer.innerHTML = ""; // Limpiar antes de generar nuevo QR
       new QRCode(qrContainer, {
         text: url,
         width: 256,
@@ -64,10 +66,10 @@
       });
     }
 
-    // Inicialización
+    // ✅ Asegurar que el código QR se genere cuando la página esté lista
     document.addEventListener("DOMContentLoaded", () => {
-      const { codigo, urlRegistro } = generarEnlaceQR();
-      console.log("Código generado:", codigo);
+      const { urlRegistro } = generarEnlaceQR();
+      console.log("Generando QR con la URL:", urlRegistro);
       generarQR(urlRegistro);
     });
   </script>
