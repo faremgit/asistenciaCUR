@@ -20,11 +20,11 @@
   <script>
     // Función para actualizar el reloj cada segundo
     function actualizarReloj() {
-      const clockElement = document.getElementById('clock');
-      const ahora = new Date();
-      // Formato: HH:MM:SS
-      const hora = ahora.toLocaleTimeString();
-      clockElement.textContent = `Hora actual: ${hora}`;
+      const now = new Date();
+      const hora = now.getHours().toString().padStart(2, '0');
+      const minutos = now.getMinutes().toString().padStart(2, '0');
+      const segundos = now.getSeconds().toString().padStart(2, '0');
+      document.getElementById('reloj').textContent = `${hora}:${minutos}:${segundos}`;
     }
 
     // Llamada inmediata para mostrar la hora al cargar
