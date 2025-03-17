@@ -6,20 +6,22 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Registro de Asistencia</h1>
-  <div id="mensaje"></div>
-  
-  <!-- Formulario para nombre y apellido -->
-  <form id="form-docente" style="display: none; margin-top: 20px;">
-    <label for="nombre">Nombre:</label><br>
-    <input type="text" id="nombre" name="nombre" required><br><br>
+  <div class="container">
+    <h1>Registro de Asistencia</h1>
+    <div id="mensaje" class="mensaje"></div>
     
-    <label for="apellido">Apellido:</label><br>
-    <input type="text" id="apellido" name="apellido" required><br><br>
-    
-    <button type="submit">Registrar</button>
-  </form>
-  
+    <!-- Formulario para nombre y apellido -->
+    <form id="form-docente" class="form-docente">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
+      
+      <label for="apellido">Apellido:</label>
+      <input type="text" id="apellido" name="apellido" required>
+      
+      <button type="submit">Registrar</button>
+    </form>
+  </div>
+
   <script>
     // 1. Función para obtener el parámetro "codigo" de la URL
     function getParametroCodigo() {
@@ -53,6 +55,7 @@
       const codigo = getParametroCodigo();
       if (!codigo) {
         mensajeDiv.textContent = "Código no encontrado en la URL.";
+        formDocente.style.display = "none";
         return;
       }
 
@@ -60,16 +63,18 @@
       const ip = await obtenerIP();
       if (!ip) {
         mensajeDiv.textContent = "No se pudo determinar la IP.";
+        formDocente.style.display = "none";
         return;
       }
 
       // Validamos la IP
       if (!validarIP(ip)) {
         mensajeDiv.textContent = `Acceso denegado: la IP ${ip} no pertenece a la red institucional.`;
+        formDocente.style.display = "none";
         return;
       }
 
-      // Si la IP es válida, mostramos el formulario para pedir nombre y apellido
+      // Si la IP es válida, mostramos el formulario
       mensajeDiv.textContent = `Conexión validada. IP: ${ip}`;
       formDocente.style.display = "block";
 
@@ -87,18 +92,14 @@
 
         // Aquí se "registra" la asistencia (solo mostramos en pantalla).
         // En un entorno real, enviaríamos esta información a un servidor.
-        mensajeDiv.textContent = `
-          Asistencia registrada:
-          \nNombre: ${nombre}
-          \nApellido: ${apellido}
-          \nCódigo: ${codigo}
-          \nFecha: ${fecha}
-          \nHora: ${hora}
-          \nIP: ${ip}
-        `;
-        
-        // (Opcional) Guardar en localStorage
-        // localStorage.setItem('asistencia', JSON.stringify({ nombre, apellido, codigo, fecha, hora, ip }));
+        mensajeDiv.textContent = 
+          `Asistencia registrada:\n` +
+          `Nombre: ${nombre}\n` +
+          `Apellido: ${apellido}\n` +
+          `Código: ${codigo}\n` +
+          `Fecha: ${fecha}\n` +
+          `Hora: ${hora}\n` +
+          `IP: ${ip}`;
         
         // Se oculta el formulario tras registrar
         formDocente.style.display = "none";
