@@ -1,13 +1,12 @@
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background: linear-gradient(135deg, #7d7aff, #9795f0);
+    color: #333;
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-    padding: 10px;
+    justify-content: center;
+    min-height: 100vh;
   }
   
   /* Contenedor principal */
