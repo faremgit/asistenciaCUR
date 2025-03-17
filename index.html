@@ -24,7 +24,7 @@
     function generarEnlaceQR() {
       const codigo = generarCodigoUnico();
       // Enlace a la página de registro con el parámetro "codigo"
-      const urlRegistro = `${window.location.origin}/registro.html?codigo=${codigo}`;
+      const urlRegistro = "https://faremgit.github.io/asistenciaCUR/registro.html?codigo=" + codigo;
       return { codigo, urlRegistro };
     }
 
