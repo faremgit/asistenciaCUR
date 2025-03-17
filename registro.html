@@ -8,107 +8,79 @@
 <body>
   <div class="container">
     <h1>Registro de Asistencia</h1>
-    <div id="mensaje" class="mensaje"></div>
     
-    <!-- Formulario para nombre y apellido -->
-    <form id="form-docente" class="form-docente">
+    <!-- Muestra la fecha y hora obtenidas del QR -->
+    <div id="fecha-hora" class="clock"></div>
+
+    <!-- Formulario de asistencia -->
+    <form id="registro-form">
       <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" name="nombre" required>
-      
+      <input type="text" id="nombre" required>
+
       <label for="apellido">Apellido:</label>
-      <input type="text" id="apellido" name="apellido" required>
-      
-      <button type="submit">Registrar</button>
+      <input type="text" id="apellido" required>
+
+      <input type="hidden" id="fecha" name="fecha">
+      <input type="hidden" id="hora" name="hora">
+
+      <button type="submit">Registrar Asistencia</button>
     </form>
+    
+    <p id="mensaje" class="mensaje"></p>
   </div>
 
   <script>
-    // 1. Función para obtener el parámetro "codigo" de la URL
-    function getParametroCodigo() {
+    document.addEventListener("DOMContentLoaded", function() {
       const params = new URLSearchParams(window.location.search);
-      return params.get('codigo');
-    }
+      const codigoQR = params.get("codigo");
 
-    // 2. Función para obtener la IP pública usando ipify
-    function obtenerIP() {
-      return fetch('https://api.ipify.org/?format=json')
-        .then(response => response.json())
-        .then(data => data.ip)
-        .catch(error => {
-          console.error('Error al obtener la IP:', error);
-          return null;
-        });
-    }
-
-    // 3. Función para validar si la IP pertenece a la red institucional
-    function validarIP(ip) {
-      // Ejemplo: se permite cualquier IP que comience con "192.168.1."
-      const ipPermitida = "45.170.226.";
-      return ip.startsWith(ipPermitida);
-    }
-
-    // 4. Lógica principal de registro
-    async function iniciarRegistro() {
-      const mensajeDiv = document.getElementById('mensaje');
-      const formDocente = document.getElementById('form-docente');
-
-      const codigo = getParametroCodigo();
-      if (!codigo) {
-        mensajeDiv.textContent = "Código no encontrado en la URL.";
-        formDocente.style.display = "none";
+      if (!codigoQR) {
+        document.getElementById("fecha-hora").textContent = "⚠ No se detectó código QR válido.";
         return;
       }
 
-      // Obtenemos la IP pública
-      const ip = await obtenerIP();
-      if (!ip) {
-        mensajeDiv.textContent = "No se pudo determinar la IP.";
-        formDocente.style.display = "none";
+      // Extraer fecha y hora del código QR (formato: YYYY-MM-DD_HH-MM-SS-random)
+      const partes = codigoQR.split("_");
+      if (partes.length < 2) {
+        document.getElementById("fecha-hora").textContent = "⚠ Código QR inválido.";
         return;
       }
 
-      // Validamos la IP
-      if (!validarIP(ip)) {
-        mensajeDiv.textContent = `Acceso denegado: la IP ${ip} no pertenece a la red institucional.`;
-        formDocente.style.display = "none";
-        return;
-      }
+      const fecha = partes[0];
+      const hora = partes[1].split("-").join(":"); // Convertimos HH-MM-SS a HH:MM:SS
 
-      // Si la IP es válida, mostramos el formulario
-      mensajeDiv.textContent = `Conexión validada. IP: ${ip}`;
-      formDocente.style.display = "block";
+      // Mostrar la fecha y hora del QR en pantalla
+      document.getElementById("fecha-hora").textContent = `Fecha del QR: ${fecha} | Hora: ${hora}`;
+      
+      // Guardar en los campos ocultos para el formulario
+      document.getElementById("fecha").value = fecha;
+      document.getElementById("hora").value = hora;
 
-      // Al enviar el formulario, registramos la asistencia
-      formDocente.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const nombre = document.getElementById('nombre').value;
-        const apellido = document.getElementById('apellido').value;
-        
-        // Obtenemos fecha y hora actual
-        const ahora = new Date();
-        const fecha = ahora.toLocaleDateString();     // Ej: "17/03/2025"
-        const hora = ahora.toLocaleTimeString();     // Ej: "15:36:12"
+      // Manejar el envío del formulario
+      document.getElementById("registro-form").addEventListener("submit", function(event) {
+        event.preventDefault();
 
-        // Aquí se "registra" la asistencia (solo mostramos en pantalla).
-        // En un entorno real, enviaríamos esta información a un servidor.
-        mensajeDiv.textContent = 
-          `Asistencia registrada:\n` +
-          `Nombre: ${nombre}\n` +
-          `Apellido: ${apellido}\n` +
-          `Código: ${codigo}\n` +
-          `Fecha: ${fecha}\n` +
-          `Hora: ${hora}\n` +
-          `IP: ${ip}`;
-        
-        // Se oculta el formulario tras registrar
-        formDocente.style.display = "none";
+        const nombre = document.getElementById("nombre").value;
+        const apellido = document.getElementById("apellido").value;
+
+        if (!nombre || !apellido) {
+          document.getElementById("mensaje").textContent = "Por favor, completa todos los campos.";
+          return;
+        }
+
+        // Simular el almacenamiento de datos (aquí podrías enviar a un backend)
+        console.log("Registro guardado:", { nombre, apellido, fecha, hora });
+
+        // Mostrar mensaje de confirmación
+        document.getElementById("mensaje").textContent = `✔ Asistencia registrada para ${nombre} ${apellido} a las ${hora} del ${fecha}.`;
+        document.getElementById("mensaje").style.color = "green";
+
+        // Limpiar el formulario después de unos segundos
+        setTimeout(() => {
+          document.getElementById("registro-form").reset();
+          document.getElementById("mensaje").textContent = "";
+        }, 3000);
       });
-    }
-
-    // Inicialización
-    document.addEventListener("DOMContentLoaded", () => {
-      iniciarRegistro();
     });
   </script>
 </body>
