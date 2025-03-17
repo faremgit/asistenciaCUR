@@ -14,6 +14,14 @@
     justify-content: center;
     min-height: 100vh;
   }
+
+  /* Reloj */
+.clock {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #333;
+  }
   
   /* Contenedor principal */
   .container {
