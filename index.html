@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de QR de Asistencia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Generación del Código QR Diario</h1>
+  <div id="qr-container"></div>
+  <p>Escanee este código con el dispositivo del docente para registrar asistencia.</p>
+  
+  <!-- Librería para generar QR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    // Genera un código único basado en la fecha y un identificador aleatorio
+    function generarCodigoUnico() {
+      const fecha = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      const random = Math.random().toString(36).substr(2, 5).toUpperCase();
+      return `${fecha}-${random}`;
+    }
+
+    // Al generar el código, se incluye en el enlace a la página de registro
+    function generarEnlaceQR() {
+      const codigo = generarCodigoUnico();
+      // Enlace a la página de registro con el parámetro "codigo"
+      const urlRegistro = `${window.location.origin}/registro.html?codigo=${codigo}`;
+      return { codigo, urlRegistro };
+    }
+
+    // Función para generar el código QR usando QRCode.js
+    function generarQR(url) {
+      const qrContainer = document.getElementById('qr-container');
+      qrContainer.innerHTML = ""; // Limpiar contenedor
+      new QRCode(qrContainer, {
+        text: url,
+        width: 256,
+        height: 256,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+    }
+
+    // Inicialización
+    document.addEventListener("DOMContentLoaded", () => {
+      const { codigo, urlRegistro } = generarEnlaceQR();
+      console.log("Código generado:", codigo);
+      generarQR(urlRegistro);
+    });
+  </script>
+</body>
+</html>

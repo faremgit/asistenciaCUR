@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Asistencia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Registro de Asistencia</h1>
+  <div id="mensaje"></div>
+  
+  <script>
+    // Función para obtener el parámetro "codigo" de la URL
+    function getParametroCodigo() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('codigo');
+    }
+
+    // Función para obtener la IP pública usando ipify
+    function obtenerIP() {
+      return fetch('https://api.ipify.org/?format=json')
+        .then(response => response.json())
+        .then(data => data.ip)
+        .catch(error => {
+          console.error('Error al obtener la IP:', error);
+          return null;
+        });
+    }
+
+    // Función para validar si la IP pertenece a la red institucional
+    function validarIP(ip) {
+      // Ejemplo: se permite cualquier IP que comience con "192.168.1."
+      const ipPermitida = "45.170.226.";
+      return ip.startsWith(ipPermitida);
+    }
+
+    // Función para registrar la asistencia
+    async function registrarAsistencia() {
+      const mensajeDiv = document.getElementById('mensaje');
+      const codigo = getParametroCodigo();
+      if (!codigo) {
+        mensajeDiv.textContent = "Código no encontrado en la URL.";
+        return;
+      }
+
+      // Obtenemos la IP pública
+      const ip = await obtenerIP();
+      if (!ip) {
+        mensajeDiv.textContent = "No se pudo determinar la IP.";
+        return;
+      }
+
+      // Validamos la IP
+      if (validarIP(ip)) {
+        // Simulación: aquí se enviaría el dato al servidor para registrar la asistencia
+        mensajeDiv.textContent = `Asistencia registrada correctamente. Tu IP es ${ip}.`;
+        console.log(`Registro de asistencia para el código ${codigo} y la IP ${ip}.`);
+      } else {
+        mensajeDiv.textContent = `Acceso denegado: la IP ${ip} no pertenece a la red institucional.`;
+      }
+    }
+
+    // Inicialización: se registra la asistencia al cargar la página
+    document.addEventListener("DOMContentLoaded", () => {
+      registrarAsistencia();
+    });
+  </script>
+</body>
+</html>
