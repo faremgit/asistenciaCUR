@@ -9,14 +9,25 @@
   <h1>Registro de Asistencia</h1>
   <div id="mensaje"></div>
   
+  <!-- Formulario para nombre y apellido -->
+  <form id="form-docente" style="display: none; margin-top: 20px;">
+    <label for="nombre">Nombre:</label><br>
+    <input type="text" id="nombre" name="nombre" required><br><br>
+    
+    <label for="apellido">Apellido:</label><br>
+    <input type="text" id="apellido" name="apellido" required><br><br>
+    
+    <button type="submit">Registrar</button>
+  </form>
+  
   <script>
-    // Función para obtener el parámetro "codigo" de la URL
+    // 1. Función para obtener el parámetro "codigo" de la URL
     function getParametroCodigo() {
       const params = new URLSearchParams(window.location.search);
       return params.get('codigo');
     }
 
-    // Función para obtener la IP pública usando ipify
+    // 2. Función para obtener la IP pública usando ipify
     function obtenerIP() {
       return fetch('https://api.ipify.org/?format=json')
         .then(response => response.json())
@@ -27,16 +38,18 @@
         });
     }
 
-    // Función para validar si la IP pertenece a la red institucional
+    // 3. Función para validar si la IP pertenece a la red institucional
     function validarIP(ip) {
       // Ejemplo: se permite cualquier IP que comience con "192.168.1."
-      const ipPermitida = "45.170.226.";
+      const ipPermitida = "192.168.1.";
       return ip.startsWith(ipPermitida);
     }
 
-    // Función para registrar la asistencia
-    async function registrarAsistencia() {
+    // 4. Lógica principal de registro
+    async function iniciarRegistro() {
       const mensajeDiv = document.getElementById('mensaje');
+      const formDocente = document.getElementById('form-docente');
+
       const codigo = getParametroCodigo();
       if (!codigo) {
         mensajeDiv.textContent = "Código no encontrado en la URL.";
@@ -51,18 +64,50 @@
       }
 
       // Validamos la IP
-      if (validarIP(ip)) {
-        // Simulación: aquí se enviaría el dato al servidor para registrar la asistencia
-        mensajeDiv.textContent = `Asistencia registrada correctamente. Tu IP es ${ip}.`;
-        console.log(`Registro de asistencia para el código ${codigo} y la IP ${ip}.`);
-      } else {
+      if (!validarIP(ip)) {
         mensajeDiv.textContent = `Acceso denegado: la IP ${ip} no pertenece a la red institucional.`;
+        return;
       }
+
+      // Si la IP es válida, mostramos el formulario para pedir nombre y apellido
+      mensajeDiv.textContent = `Conexión validada. IP: ${ip}`;
+      formDocente.style.display = "block";
+
+      // Al enviar el formulario, registramos la asistencia
+      formDocente.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const nombre = document.getElementById('nombre').value;
+        const apellido = document.getElementById('apellido').value;
+        
+        // Obtenemos fecha y hora actual
+        const ahora = new Date();
+        const fecha = ahora.toLocaleDateString();     // Ej: "17/03/2025"
+        const hora = ahora.toLocaleTimeString();     // Ej: "15:36:12"
+
+        // Aquí se "registra" la asistencia (solo mostramos en pantalla).
+        // En un entorno real, enviaríamos esta información a un servidor.
+        mensajeDiv.textContent = `
+          Asistencia registrada:
+          \nNombre: ${nombre}
+          \nApellido: ${apellido}
+          \nCódigo: ${codigo}
+          \nFecha: ${fecha}
+          \nHora: ${hora}
+          \nIP: ${ip}
+        `;
+        
+        // (Opcional) Guardar en localStorage
+        // localStorage.setItem('asistencia', JSON.stringify({ nombre, apellido, codigo, fecha, hora, ip }));
+        
+        // Se oculta el formulario tras registrar
+        formDocente.style.display = "none";
+      });
     }
 
-    // Inicialización: se registra la asistencia al cargar la página
+    // Inicialización
     document.addEventListener("DOMContentLoaded", () => {
-      registrarAsistencia();
+      iniciarRegistro();
     });
   </script>
 </body>

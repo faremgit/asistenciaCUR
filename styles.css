@@ -18,5 +18,22 @@ body {
     padding: 10px;
     background-color: #e0e0e0;
     border-radius: 5px;
+    white-space: pre-line; /* para mostrar saltos de línea en el textContent */
+  }
+  
+  form {
+    display: block;
+    margin: 0 auto;
+    text-align: left;
+    max-width: 300px;
+  }
+  label, input {
+    display: block;
+    width: 100%;
+  }
+  button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    cursor: pointer;
   }
   
