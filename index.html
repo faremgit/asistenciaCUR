@@ -6,16 +6,18 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Generación del Código QR Diario</h1>
-  <div id="qr-container"></div>
-  <p>Escanea este código con el dispositivo del docente para registrar asistencia.</p>
+  <div class="container">
+    <h1>Generación del Código QR Diario</h1>
+    <div id="qr-container" class="qr-container"></div>
+    <p>Escanea este código con el dispositivo del docente para registrar asistencia.</p>
+  </div>
   
   <!-- Librería para generar QR -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     // Genera un código único basado en la fecha y un identificador aleatorio
     function generarCodigoUnico() {
-      const fecha = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const fecha = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
       const random = Math.random().toString(36).substr(2, 5).toUpperCase();
       return `${fecha}-${random}`;
     }
@@ -23,7 +25,7 @@
     // Genera la URL con el código único
     function generarEnlaceQR() {
       const codigo = generarCodigoUnico();
-      // Ajusta la ruta de registro según tu entorno (carpeta, dominio, etc.)
+      // Ajusta la ruta de registro según tu entorno
       const urlRegistro = "https://faremgit.github.io/asistenciaCUR/registro.html?codigo=" + codigo;
       return { codigo, urlRegistro };
     }
